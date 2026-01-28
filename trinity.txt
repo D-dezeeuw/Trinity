@@ -1,0 +1,54 @@
+
+?- TRINITY -? 																				
+				
+Rules / Flow: 																					
+0.0 - There are 3 base tiles: Life, Commerce and Industry plus the Army tile. 		 	
+0.1 - on the Table there is the Board, an Event Stack and the Civilisation Stack ( now called E. and C. Stack ) 			
+1.0 - All players take 5 tiles (2 - 4 players)
+1.1 - Life = 20pts, Comm = 10pts, Indus = 1pts. The person with most points starts (with a Tie discard and redraw) 		 	
+2.0 - At the start of a turn take one Tile from the C. Stack plus one tile for every Trinity you have. 				
+3.0 - Place the Life, Comm & Industry tiles adjacent to your other tiles in an orthogonal way	
+4.0 - A trinity is formed when a Life tile is connected to a Comm and Industry tile of the same player  	
+4.0 - If a trinity has formed, Stack the tiles on the Life space with the Life tile on top then Commerce and then Industry 	
+4.1 - After stacking, take an Event card read it silently, and placed it closed in front of you. ( Based on the event, some must played directly while others give a tactical advantage in a chosen turn ) 	
+5.0 - You can convert a Trinity for three Army tiles creating a "Barracks" tower ( These tiles are replaced with the tiles forming the Trinity) 	
+5.1 - Army tiles can be removed from the barracks to fortify or damage base tiles or to damage other Barracks. (tile for tile) 	
+5.2 - To create a fortification, place an army tile on top of an owned tile or Trinity 	
+5.2 - You can only attack and destroy a tile or trinity by having the same stack height of army tiles as the attacked stack.
+6.0 - A turn is over when no moves can be made by the player (draw phase - placement phase - attack phase)
+6.1 - After the turn is over, the player left of him/her is next. 	
+7.0 -	When the board is filled with tiles, All Trinities are counted, the person with the most Trinities has won the game. 
+	
+	
+About:
+Theme			Simulation of Civilisation
+System		The expansion of life though Supply and Demand
+Create		Trinities to expand and fortify 
+Transform	A Trinity into three Army tokens 	
+Twist			With every Trinity an event unfolds 
+Destroy		Use your army to fortify your tiles or destroy others 
+Recycle		Tiles destroyed are returned to the Civilisation Stack
+Dominate	The board with trinities when all tiles are filed to win
+
+
+The board is a default chessboard checkered 8x8 tiled grid.
+rendered in isometric perspective.
+
+Technologies used: Webgl, Canvas, GLSL.
+
+Do not use external libraries.
+
+Style:
+- minimalistic
+- isometric 3D
+- lines
+- light greys and white
+- soft pastels for color shading
+- luminesence
+- soft transparencies
+- refraction
+
+Visuals:
+- Board is visible from 45 degree angle top down
+- tiles are milky - transparent rounded tiles with refraction and shiny sides but rough textured tops.
+- tiles luminate softly when hovered in a smooth way in and out.
