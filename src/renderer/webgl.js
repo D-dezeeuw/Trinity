@@ -2,19 +2,25 @@
  * Trinity - WebGL Initialization and Utilities
  */
 
+import { RENDER } from '../config.js';
+
 /**
  * Initialize WebGL 2.0 context
  * @param {HTMLCanvasElement} canvas
  * @returns {WebGL2RenderingContext|null}
  */
 export function initWebGL(canvas) {
+  // Enable preserveDrawingBuffer in test mode for screenshot capture
+  const isTestMode = typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).has('test');
+
   const options = {
     alpha: true,
     antialias: true,
     depth: true,
     stencil: false,
     premultipliedAlpha: true,
-    preserveDrawingBuffer: false,
+    preserveDrawingBuffer: isTestMode,
     powerPreference: 'high-performance',
   };
 
@@ -223,7 +229,8 @@ export function setupRenderState(gl) {
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
   // Set clear color (dark background)
-  gl.clearColor(0.1, 0.1, 0.12, 1.0);
+  const [r, g, b, a] = RENDER.CLEAR_COLOR;
+  gl.clearColor(r, g, b, a);
 }
 
 /**

@@ -24,7 +24,7 @@
 - [x] Can you "steal" a trinity using opponents' tiles?
   > **Answered in rules:** No, tiles must be your own.
 
-- [ ] **Multiple trinities:** What if placing one Life tile connects to two separate Commerce+Industry pairs?
+- [x] **Multiple trinities:** What if placing one Life tile connects to two separate Commerce+Industry pairs?
   > **Suggestion:** Allow forming multiple trinities in one placement (rewarding clever positioning), OR limit to one trinity per turn (simpler). I'd recommend allowing multiples - it creates satisfying combo moments like Azul or Ticket to Ride.
 
   Proposed Solution: Allow forming multiple trinities at once
@@ -33,6 +33,13 @@
   > **Implied:** The Commerce and Industry spaces become empty and available again. This is interesting - it means the board can "breathe" and trinities actually free up space.
 
   Proposed Solution: Yes the tiles are freed up (like real estate, where objects move to a new skyscraper)
+
+- [x] **Trinity Propagation Rule:** When placing a tile, which Housing tiles can form a Trinity?
+  > **Rule:** When any tile is placed, check ALL adjacent Housing tiles (not just the placed tile) to see if they can now complete a Trinity. The Trinity always forms ON the Housing tile.
+  >
+  > **Example:** If Commerce is placed at (2,2), and there's a Housing at (2,3) with an Industry at (2,4), the Housing at (2,3) can now form a Trinity even though it wasn't the tile just placed.
+  >
+  > **Implementation:** After placing a tile, iterate through all adjacent positions. For each adjacent Housing tile owned by the same player, check if it has both a Commerce and Industry neighbor.
 
 ## Combat & Army
 

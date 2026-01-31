@@ -2,10 +2,13 @@
   "name": "trinity",
   "version": "0.1.0",
   "description": "A tile-placement strategy game with WebGL rendering",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "game",
@@ -14,5 +17,8 @@
     "strategy"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^3.0.0"
+  }
 }

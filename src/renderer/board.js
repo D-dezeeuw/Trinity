@@ -12,6 +12,7 @@ import {
   loadShaderSource
 } from './webgl.js';
 import { mat4, vec3 } from '../utils/math.js';
+import { BOARD, RENDER } from '../config.js';
 
 export class BoardRenderer {
   constructor(gl) {
@@ -21,9 +22,9 @@ export class BoardRenderer {
     this.uniforms = null;
     this.indexCount = 0;
 
-    // Board settings
-    this.boardSize = 8;
-    this.tileSize = 1.0;
+    // Board settings from config
+    this.boardSize = BOARD.SIZE;
+    this.tileSize = BOARD.TILE_SIZE;
 
     // Model matrix (identity for board at origin)
     this.modelMatrix = mat4.create();
@@ -31,8 +32,16 @@ export class BoardRenderer {
     // Hovered tile (-1, -1 means no hover)
     this.hoveredTile = { x: -1, y: -1 };
 
-    // Light direction (from top-right)
-    this.lightDir = vec3.create(0.5, 1.0, 0.5);
+    // Valid placements (for tile placement mode)
+    this.validPlacements = [];
+    this.validPlacementsFlat = new Float32Array(64 * 2); // Max 64 valid positions
+
+    // Landmark preview positions (tiles that would form a landmark)
+    this.landmarkPreview = [];
+    this.landmarkPreviewFlat = new Float32Array(6); // Max 3 positions (H, C, I)
+
+    // Light direction from config
+    this.lightDir = vec3.create(...RENDER.LIGHT_DIRECTION);
     vec3.normalize(this.lightDir, this.lightDir);
   }
 
@@ -62,7 +71,11 @@ export class BoardRenderer {
       'u_time',
       'u_hoveredTile',
       'u_tileSize',
-      'u_boardSize'
+      'u_boardSize',
+      'u_validPlacements',
+      'u_validPlacementCount',
+      'u_landmarkPreview',
+      'u_landmarkPreviewCount'
     ]);
 
     // Get attribute locations
@@ -92,37 +105,96 @@ export class BoardRenderer {
   }
 
   /**
-   * Create board geometry (flat plane)
+   * Create board geometry (3D box with sides)
    */
   createBoardGeometry() {
     const size = this.boardSize * this.tileSize;
     const half = size / 2;
+    const height = BOARD.HEIGHT;
 
-    // Simple quad for the board
+    // 3D box geometry with 6 faces (24 vertices for proper per-face normals)
     const positions = [
-      -half, 0, -half,
-       half, 0, -half,
+      // Top face (Y = height) - vertices 0-3
+      -half, height, -half,
+       half, height, -half,
+       half, height,  half,
+      -half, height,  half,
+
+      // Front face (Z = -half, facing -Z) - vertices 4-7
+      -half,      0, -half,
+       half,      0, -half,
+       half, height, -half,
+      -half, height, -half,
+
+      // Back face (Z = +half, facing +Z) - vertices 8-11
+       half,      0,  half,
+      -half,      0,  half,
+      -half, height,  half,
+       half, height,  half,
+
+      // Left face (X = -half, facing -X) - vertices 12-15
+      -half,      0,  half,
+      -half,      0, -half,
+      -half, height, -half,
+      -half, height,  half,
+
+      // Right face (X = +half, facing +X) - vertices 16-19
+       half,      0, -half,
+       half,      0,  half,
+       half, height,  half,
+       half, height, -half,
+
+      // Bottom face (Y = 0, facing -Y) - vertices 20-23
+      -half, 0,  half,
        half, 0,  half,
-      -half, 0,  half
+       half, 0, -half,
+      -half, 0, -half,
     ];
 
     const normals = [
-      0, 1, 0,
-      0, 1, 0,
-      0, 1, 0,
-      0, 1, 0
+      // Top face - pointing up
+      0, 1, 0,   0, 1, 0,   0, 1, 0,   0, 1, 0,
+      // Front face - pointing -Z
+      0, 0, -1,  0, 0, -1,  0, 0, -1,  0, 0, -1,
+      // Back face - pointing +Z
+      0, 0, 1,   0, 0, 1,   0, 0, 1,   0, 0, 1,
+      // Left face - pointing -X
+      -1, 0, 0,  -1, 0, 0,  -1, 0, 0,  -1, 0, 0,
+      // Right face - pointing +X
+      1, 0, 0,   1, 0, 0,   1, 0, 0,   1, 0, 0,
+      // Bottom face - pointing down
+      0, -1, 0,  0, -1, 0,  0, -1, 0,  0, -1, 0,
     ];
 
     const uvs = [
-      0, 0,
-      1, 0,
-      1, 1,
-      0, 1
+      // Top face - full board UV mapping
+      0, 0,   1, 0,   1, 1,   0, 1,
+      // Front face - side UVs
+      0, 0,   1, 0,   1, 1,   0, 1,
+      // Back face - side UVs
+      0, 0,   1, 0,   1, 1,   0, 1,
+      // Left face - side UVs
+      0, 0,   1, 0,   1, 1,   0, 1,
+      // Right face - side UVs
+      0, 0,   1, 0,   1, 1,   0, 1,
+      // Bottom face - not visible but included
+      0, 0,   1, 0,   1, 1,   0, 1,
     ];
 
+    // CCW winding order for each face (when viewed from outside)
     const indices = [
-      0, 1, 2,
-      0, 2, 3
+      // Top face
+      0, 3, 2,   0, 2, 1,
+      // Front face
+      4, 7, 6,   4, 6, 5,
+      // Back face
+      8, 11, 10,   8, 10, 9,
+      // Left face
+      12, 15, 14,   12, 14, 13,
+      // Right face
+      16, 19, 18,   16, 18, 17,
+      // Bottom face
+      20, 23, 22,   20, 22, 21,
     ];
 
     return { positions, normals, uvs, indices };
@@ -164,6 +236,14 @@ export class BoardRenderer {
     gl.uniform1f(this.uniforms.u_tileSize, this.tileSize);
     gl.uniform1i(this.uniforms.u_boardSize, this.boardSize);
 
+    // Valid placements
+    gl.uniform2fv(this.uniforms.u_validPlacements, this.validPlacementsFlat);
+    gl.uniform1i(this.uniforms.u_validPlacementCount, this.validPlacements.length);
+
+    // Landmark preview
+    gl.uniform2fv(this.uniforms.u_landmarkPreview, this.landmarkPreviewFlat);
+    gl.uniform1i(this.uniforms.u_landmarkPreviewCount, this.landmarkPreview.length);
+
     // Draw
     gl.bindVertexArray(this.vao);
     gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
@@ -189,5 +269,69 @@ export class BoardRenderer {
    */
   getTileSize() {
     return this.tileSize;
+  }
+
+  /**
+   * Set valid placement positions to highlight
+   * @param {Array<{x: number, y: number}>} positions
+   */
+  setValidPlacements(positions) {
+    this.validPlacements = positions;
+
+    // Flatten to Float32Array for uniform
+    for (let i = 0; i < 64; i++) {
+      if (i < positions.length) {
+        this.validPlacementsFlat[i * 2] = positions[i].x;
+        this.validPlacementsFlat[i * 2 + 1] = positions[i].y;
+      } else {
+        this.validPlacementsFlat[i * 2] = -1;
+        this.validPlacementsFlat[i * 2 + 1] = -1;
+      }
+    }
+  }
+
+  /**
+   * Clear valid placement highlighting
+   */
+  clearValidPlacements() {
+    this.validPlacements = [];
+    this.validPlacementsFlat.fill(-1);
+  }
+
+  /**
+   * Check if a position is in the valid placements list
+   * @param {number} x
+   * @param {number} y
+   * @returns {boolean}
+   */
+  isValidPlacement(x, y) {
+    return this.validPlacements.some(p => p.x === x && p.y === y);
+  }
+
+  /**
+   * Set landmark preview positions (tiles that would form a landmark)
+   * @param {Array<{x: number, y: number}>} positions
+   */
+  setLandmarkPreview(positions) {
+    this.landmarkPreview = positions || [];
+
+    // Flatten to Float32Array for uniform
+    for (let i = 0; i < 3; i++) {
+      if (i < this.landmarkPreview.length) {
+        this.landmarkPreviewFlat[i * 2] = this.landmarkPreview[i].x;
+        this.landmarkPreviewFlat[i * 2 + 1] = this.landmarkPreview[i].y;
+      } else {
+        this.landmarkPreviewFlat[i * 2] = -1;
+        this.landmarkPreviewFlat[i * 2 + 1] = -1;
+      }
+    }
+  }
+
+  /**
+   * Clear landmark preview highlighting
+   */
+  clearLandmarkPreview() {
+    this.landmarkPreview = [];
+    this.landmarkPreviewFlat.fill(-1);
   }
 }

@@ -76,12 +76,22 @@ Place any number of tiles from your hand onto the board. Tiles must be placed:
 - **Orthogonally adjacent** (not diagonal) to one of your existing tiles, OR
 - In your **starting zone** if you have no tiles on the board.
 
+#### Combo Placement (Optional Rule)
+When enabled, you may chain multiple tile placements in a single turn:
+- After placing your first tile, you may place additional tiles if each new tile connects to **any of your tiles that has a different type** than the tile being placed.
+- Example: Place Housing → then place Commerce next to your existing Industry → then place Industry next to your existing Commerce.
+- Invalid: You cannot continue a combo by connecting to a tile of the same type (e.g., placing Commerce next to only Commerce tiles won't extend the combo).
+
+> *Strategic note: Combos reward diverse development. Plan your board layout to maximize chain opportunities.*
+
 #### Building a Landmark
 When one of your **Housing** tiles is orthogonally adjacent to both a **Commerce** and an **Industry** tile you own, a Landmark is built:
 
 1. **Stack** the three tiles on the Housing tile's space (Housing on top, then Commerce, then Industry).
 2. The spaces vacated by Commerce and Industry become **empty** and available for development.
 3. Draw **1 Event Card**, read it silently, and place it face-down in front of you.
+
+> **Trinity Propagation:** When you place any tile, check not only the placed tile but also all adjacent Housing tiles you own. If placing a Commerce or Industry tile completes a Trinity for a nearby Housing tile, the Landmark forms on that Housing tile.
 
 > You may build **multiple Landmarks** in a single turn if your placement allows it. Resolve each one and draw an Event card for each.
 
@@ -172,6 +182,7 @@ In case of a tie, the tied player with the most secured Landmarks wins. If still
 | Action | Cost | Effect |
 |--------|------|--------|
 | Develop | 1 tile from hand | Expand your territory |
+| Combo | 1+ tiles (chained) | Place tiles connecting to different-type neighbors |
 | Build Landmark | 3 adjacent tiles (H+C+I) | Stack tiles, free 2 spaces, draw Event |
 | Establish Headquarters | 1 Landmark | Gain 3 Agents, lose the Landmark |
 | Deploy Agent | 1 Agent | Move one space to adjacent empty space |
@@ -208,7 +219,8 @@ In case of a tie, the tied player with the most secured Landmarks wins. If still
 
 | Term | Definition |
 |------|------------|
-| **Landmark** | A stack of Housing + Commerce + Industry tiles owned by one player |
+| **Combo** | Chaining multiple tile placements by connecting to different-type neighbors |
+| **Landmark** | A stack of Housing + Commerce + Industry tiles owned by one player; always forms on the Housing tile |
 | **Headquarters (HQ)** | A converted Landmark; a stack of Agents ready for deployment |
 | **Agents** | Specialists who secure your assets or execute hostile takeovers |
 | **Secure** | Placing an Agent on a tile/Landmark to protect it |

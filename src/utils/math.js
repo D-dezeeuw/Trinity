@@ -601,3 +601,15 @@ export function degToRad(degrees) {
 export function radToDeg(radians) {
   return radians * 180 / Math.PI;
 }
+
+/**
+ * Check if a point is inside a rectangle
+ * @param {number} px - Point X coordinate
+ * @param {number} py - Point Y coordinate
+ * @param {{x: number, y: number, width: number, height: number}} rect - Rectangle bounds
+ * @returns {boolean} True if point is inside rectangle
+ */
+export function pointInRect(px, py, rect) {
+  return px >= rect.x && px <= rect.x + rect.width &&
+         py >= rect.y && py <= rect.y + rect.height;
+}
