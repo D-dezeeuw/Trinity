@@ -3,7 +3,7 @@
  * Tests for the modular renderer system
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from './expect.js';
 import { GameState } from '../src/state/GameState.js';
 import { TileType } from '../src/game/TileTypes.js';
 import { TextRenderer } from '../src/renderer/TextRenderer.js';

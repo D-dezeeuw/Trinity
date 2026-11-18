@@ -2,7 +2,7 @@
  * Trinity - Math Utilities Tests
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from './expect.js';
 import {
   vec2,
   vec3,

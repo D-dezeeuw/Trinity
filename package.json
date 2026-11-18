@@ -7,8 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "node --test \"tests/*.test.js\""
   },
   "keywords": [
     "game",
@@ -18,7 +17,7 @@
   ],
   "author": "",
   "license": "MIT",
-  "devDependencies": {
-    "vitest": "^3.0.0"
+  "engines": {
+    "node": ">=22"
   }
 }

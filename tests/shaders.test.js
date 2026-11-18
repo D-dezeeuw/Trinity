@@ -3,7 +3,7 @@
  * Uses glslangValidator to validate GLSL shaders at test time
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from './expect.js';
 import { execSync } from 'child_process';
 import { readdirSync } from 'fs';
 import { join } from 'path';

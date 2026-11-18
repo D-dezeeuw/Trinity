@@ -30,9 +30,11 @@ This repository contains a WebGL-based digital implementation of Trinity featuri
 
 ## Getting Started
 
+No dependencies and no build step: the files in this repo are what the browser loads.
+
 ```bash
-npm install
-npm start
+npm start   # node server.js, or serve the folder with any static server
+npm test    # node:test, Node 22+
 ```
 
 Then open `http://localhost:3000` in your browser.
@@ -42,7 +44,7 @@ Then open `http://localhost:3000` in your browser.
 - Vanilla JavaScript (ES6 modules)
 - WebGL 2.0
 - GLSL shaders
-- Node.js (development server)
+- Node.js (optional dev server, built-in test runner; no npm packages)
 
 ## License
 

@@ -4,7 +4,7 @@
  * Using ASCII-based test utilities for readable test scenarios
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from './expect.js';
 import { GameState } from '../src/state/GameState.js';
 import { TileType } from '../src/game/TileTypes.js';
 import { detectPotentialLandmarks } from '../src/game/Rules.js';

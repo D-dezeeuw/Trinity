@@ -2,7 +2,7 @@
  * Trinity - GameState Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from './expect.js';
 import { GameState, GamePhase, StateEvent } from '../src/state/GameState.js';
 
 describe('GameState', () => {

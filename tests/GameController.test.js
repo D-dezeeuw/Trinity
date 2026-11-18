@@ -2,7 +2,7 @@
  * Trinity - GameController Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from './expect.js';
 import { GameController } from '../src/controllers/GameController.js';
 import { GameState, TurnPhase } from '../src/state/GameState.js';
 import { TileType, createTile } from '../src/game/TileTypes.js';

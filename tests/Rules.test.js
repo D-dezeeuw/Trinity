@@ -2,7 +2,7 @@
  * Trinity - Game Rules Tests
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from './expect.js';
 import {
   getAdjacentPositions,
   isInStartingZone,

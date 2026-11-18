@@ -3,7 +3,7 @@
  * Tests complete game flows and multi-system interactions
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from './expect.js';
 import { GameController } from '../src/controllers/GameController.js';
 import { GameState, StateEvent, TurnPhase } from '../src/state/GameState.js';
 import { GameRules } from '../src/game/GameRules.js';
